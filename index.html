@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chat {
+            display: flex;
+        }
+
+        h1, h2, button, p {
+            margin-left: 30px;
+        }
+
+        .chat_input {
+            margin-right: 100px;
+        }
+        
+        input {
+            width: 100%;
+        }
+
+        .input {
+            margin: 30px;
+        }
+
+        #comment {
+            min-width: 100%;
+            max-width: 100%;
+            min-height: 100px;
+        }
+
+        .output {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        img {
+            width: 70px;
+            height: 100px;
+            justify-self: center;
+        }
+
+        #name_output {
+            justify-self: start;
+            align-self: center;
+            margin: 0;
+        }
+
+        #comment_output {
+            grid-column: 1 / 3;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Сервис комментариев со спам фильтром</h1>
+    <div id="chat">
+        <div class="chat_input">
+            <h2>Оставьте ваш комментарий</h2>
+            <div class="input">Введите ваше ФИО:</label>
+                <br>
+                <input type="text" name="name" id="name" class="name">
+            </div>
+
+            <div class="input">
+                <label for="avatar">Введите ссылку вашего аватара:</label>
+                <br>
+                <input type="text" name="avatar" id="avatar" class="avatar">
+            </div>
+
+            <div class="input">
+                <label for="comment">Оставьте комментарий</label>
+                <br>
+                <textarea name="comment" id="comment" class="comment"></textarea>
+            </div>   
+
+                <button class="button">Отправить</button>
+        </div>
+
+        <div>
+            <h2>Чат</h2>
+
+            <div class="output">
+                <img id="avatar_output" src="" alt="">
+                <p id="name_output"></p>
+                <p id="comment_output"></p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        // 2 fonctions qui mettent la première lettre de chaque mot en majuscule
+        // et enlèvent les espaces en début et fin, et les espaces multiples.
+
+        // Version avec MAP et SLICE
+
+        function titleCase1(str) {
+            return str.toLowerCase().split(' ').map((el) => el.charAt(0).toUpperCase() + el.slice(1)).join(" ");
+        }
+
+        // Version avec FOREACH et REPLACE    
+
+        function titleCase2(str){
+            let words = str.toLowerCase().split(' ');
+
+            let array = [];
+
+            words.forEach(word => {
+                let firstLetter = word.charAt(0).toUpperCase();
+                let replacement = word.replace(word.charAt(0), firstLetter);
+
+                array.push(replacement);
+            });
+
+            return array.join(' ');
+        }
+
+        function removeExtraSpace(str) {
+            str = str.replace(/\s{2,}/g," "); // Enlève les espaces doubles, triples, etc.
+            str = str.replace(/^\s/, ""); // Enlève les espaces au début
+            str = str.replace(/\s$/,""); // Enlève les espaces à la fin
+
+            return str;
+        }
+
+        // ------------
+
+
+        function checkSpam(str) {
+            str = str.replace(/viagra/ig,'***');
+            str = str.replace(/XXX/ig,'***');
+
+            return str;
+        }
+
+        const button = document.querySelector('.button');
+
+        button.addEventListener('click', () => {
+            const name = document.querySelector('.name').value;
+            const nameOutput = document.getElementById('name_output');
+            nameOutput.innerHTML = removeExtraSpace(titleCase1(name));
+
+            const avatar = document.querySelector('.avatar').value;
+            const avatarOutput = document.getElementById('avatar_output');
+            avatarOutput.setAttribute('src',avatar);
+
+            const comment = document.querySelector('.comment').value;
+            const commentOutput = document.getElementById('comment_output');
+            commentOutput.innerHTML = checkSpam(comment);
+        });
+
+    </script>
+</body>
+</html>
